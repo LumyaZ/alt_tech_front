@@ -1,5 +1,5 @@
 import { CurrencyPipe } from "@angular/common";
-import { Component, OnInit, inject, signal } from "@angular/core";
+import { Component, OnInit, computed, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Product } from "app/products/data-access/product.model";
 import { ProductsService } from "app/products/data-access/products.service";
@@ -10,6 +10,8 @@ import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DataViewModule } from 'primeng/dataview';
 import { DialogModule } from 'primeng/dialog';
+import { InputNumberModule } from "primeng/inputnumber";
+import { InputTextModule } from "primeng/inputtext";
 import { TagModule } from "primeng/tag";
 import { RatingModule } from "primeng/rating";
 
@@ -42,6 +44,8 @@ const emptyProduct: Product = {
     DialogModule,
     TagModule,
     RatingModule,
+    InputNumberModule,
+    InputTextModule,
     FormsModule,
     CurrencyPipe,
     ProductFormComponent,
@@ -55,6 +59,22 @@ export class ProductListComponent implements OnInit {
   public readonly products = this.productsService.products;
   // N'affiche "Modifier" (et le contrôle du formulaire en mode édition) qu'à admin@admin.com
   public readonly isAdmin = this.authService.isAdmin;
+
+  // 12.2 — Filtrage : recherche par nom ou catégorie, appliquée côté front
+  public readonly searchTerm = signal("");
+  public readonly filteredProducts = computed(() => {
+    const term = this.searchTerm().trim().toLowerCase();
+    if (!term) {
+      return this.products();
+    }
+    return this.products().filter(product =>
+      product.name.toLowerCase().includes(term) ||
+      product.category.toLowerCase().includes(term)
+    );
+  });
+
+  // 12.3 — Quantité choisie par produit avant l'ajout au panier (1 par défaut)
+  private readonly quantities = new Map<number, number>();
 
   public isDialogVisible = false;
   public isCreation = false;
@@ -70,9 +90,17 @@ export class ProductListComponent implements OnInit {
     this.editedProduct.set(emptyProduct);
   }
 
-  // Ajoute une unité du produit au panier de l'utilisateur connecté
+  public quantityFor(product: Product): number {
+    return this.quantities.get(product.id) ?? 1;
+  }
+
+  public setQuantity(product: Product, quantity: number): void {
+    this.quantities.set(product.id, quantity);
+  }
+
+  // Ajoute la quantité choisie du produit au panier de l'utilisateur connecté
   public onAddToCart(product: Product) {
-    this.cartService.addItem(product.id, 1).subscribe();
+    this.cartService.addItem(product.id, this.quantityFor(product)).subscribe();
   }
 
   // Ouvre le formulaire pré-rempli pour modifier le produit (réservé admin)

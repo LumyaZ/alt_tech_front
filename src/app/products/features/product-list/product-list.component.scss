@@ -3,3 +3,12 @@
     height: 100%;
     overflow: auto;
 }
+
+.search-field {
+    max-width: 400px;
+    margin: 1rem auto;
+
+    input {
+        width: 100%;
+    }
+}

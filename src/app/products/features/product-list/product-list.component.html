@@ -2,7 +2,15 @@
 
 <p-button label="Créer produit" (onClick)="onCreate()" class="block text-center"/>
 
-<p-dataView #dv [value]="products()">
+<div class="search-field">
+    <input pInputText
+        type="text"
+        placeholder="Rechercher par nom ou catégorie..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)" />
+</div>
+
+<p-dataView #dv [value]="filteredProducts()" [paginator]="true" [rows]="6">
     <ng-template pTemplate="list" let-products>
         @for (product of products; track product.id) {
             <p-card class="block mb-2">
@@ -28,7 +36,13 @@
                 </div>
 
                 <ng-template pTemplate="footer">
-                    <div class="flex gap-3 mt-1">
+                    <div class="flex align-items-center gap-3 mt-1">
+                        <p-inputNumber
+                            [ngModel]="quantityFor(product)"
+                            (ngModelChange)="setQuantity(product, $event)"
+                            [min]="1"
+                            [showButtons]="true"
+                            class="w-8rem" />
                         <p-button label="Ajouter au panier" icon="pi pi-shopping-cart" (onClick)="onAddToCart(product)"/>
                         @if (isAdmin()) {
                             <p-button label="Modifier" severity="secondary" (onClick)="onUpdate(product)"/>
