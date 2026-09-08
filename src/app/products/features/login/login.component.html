@@ -1,0 +1,32 @@
+<div class="login-container">
+  <h1>Connexion</h1>
+
+  <form #form="ngForm" (ngSubmit)="onSubmit()">
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input pInputText
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="email"
+        required>
+    </div>
+
+    <div class="form-field">
+      <label for="password">Mot de passe</label>
+      <p-password
+        id="password"
+        name="password"
+        [(ngModel)]="password"
+        [feedback]="false"
+        [toggleMask]="true"
+        required/>
+    </div>
+
+    @if (errorMessage) {
+      <p class="error-message">{{ errorMessage }}</p>
+    }
+
+    <p-button type="submit" [disabled]="!form.valid" label="Se connecter"/>
+  </form>
+</div>
