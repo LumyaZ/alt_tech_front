@@ -5,8 +5,9 @@
     <div class="p-toolbar-group-center">
         {{ title }}
     </div>
-    <div class="p-toolbar-group-end">
+    <div class="p-toolbar-group-end flex align-items-center gap-3">
         <i class="pi pi-shopping-cart" style="font-size: 2rem"></i>
+        <p-button label="Déconnexion" icon="pi pi-sign-out" severity="secondary" (onClick)="onLogout()"/>
     </div>
 </p-toolbar>
 <p-splitter

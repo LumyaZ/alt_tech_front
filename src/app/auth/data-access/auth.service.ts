@@ -8,6 +8,7 @@ interface TokenResponse {
 }
 
 const TOKEN_STORAGE_KEY = "auth_token";
+const ADMIN_EMAIL = "admin@admin.com";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -18,6 +19,23 @@ export class AuthService {
 
   public readonly token = this._token.asReadonly();
   public readonly isAuthenticated = computed(() => this._token() !== null);
+
+  // Email de l'utilisateur connecté, lu directement dans le payload du JWT (claim "sub")
+  // - pas besoin d'appeler le back, juste pour affichage/UI (le back revérifie tout de toute façon)
+  public readonly email = computed(() => {
+    const token = this._token();
+    if (!token) {
+      return null;
+    }
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.sub as string;
+    } catch {
+      return null;
+    }
+  });
+
+  public readonly isAdmin = computed(() => this.email() === ADMIN_EMAIL);
 
   // Envoie email/mot de passe à /token, stocke le JWT reçu si la connexion réussit
   public login(email: string, password: string): Observable<TokenResponse> {

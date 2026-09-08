@@ -1,11 +1,17 @@
+import { CurrencyPipe } from "@angular/common";
 import { Component, OnInit, inject, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Product } from "app/products/data-access/product.model";
 import { ProductsService } from "app/products/data-access/products.service";
 import { ProductFormComponent } from "app/products/ui/product-form/product-form.component";
+import { CartService } from "app/cart/data-access/cart.service";
+import { AuthService } from "app/auth/data-access/auth.service";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DataViewModule } from 'primeng/dataview';
 import { DialogModule } from 'primeng/dialog';
+import { TagModule } from "primeng/tag";
+import { RatingModule } from "primeng/rating";
 
 const emptyProduct: Product = {
   id: 0,
@@ -29,12 +35,26 @@ const emptyProduct: Product = {
   templateUrl: "./product-list.component.html",
   styleUrls: ["./product-list.component.scss"],
   standalone: true,
-  imports: [DataViewModule, CardModule, ButtonModule, DialogModule, ProductFormComponent],
+  imports: [
+    DataViewModule,
+    CardModule,
+    ButtonModule,
+    DialogModule,
+    TagModule,
+    RatingModule,
+    FormsModule,
+    CurrencyPipe,
+    ProductFormComponent,
+  ],
 })
 export class ProductListComponent implements OnInit {
   private readonly productsService = inject(ProductsService);
+  private readonly cartService = inject(CartService);
+  private readonly authService = inject(AuthService);
 
   public readonly products = this.productsService.products;
+  // N'affiche "Modifier" (et le contrôle du formulaire en mode édition) qu'à admin@admin.com
+  public readonly isAdmin = this.authService.isAdmin;
 
   public isDialogVisible = false;
   public isCreation = false;
@@ -50,12 +70,19 @@ export class ProductListComponent implements OnInit {
     this.editedProduct.set(emptyProduct);
   }
 
+  // Ajoute une unité du produit au panier de l'utilisateur connecté
+  public onAddToCart(product: Product) {
+    this.cartService.addItem(product.id, 1).subscribe();
+  }
+
+  // Ouvre le formulaire pré-rempli pour modifier le produit (réservé admin)
   public onUpdate(product: Product) {
     this.isCreation = false;
     this.isDialogVisible = true;
     this.editedProduct.set(product);
   }
 
+  // Supprime le produit (réservé à admin@admin.com côté back, 403 sinon)
   public onDelete(product: Product) {
     this.productsService.delete(product.id).subscribe();
   }
@@ -75,5 +102,17 @@ export class ProductListComponent implements OnInit {
 
   private closeDialog() {
     this.isDialogVisible = false;
+  }
+
+  // Mappe le statut de stock à une couleur de badge PrimeNG
+  public getSeverity(status: Product["inventoryStatus"]): "success" | "warning" | "danger" {
+    switch (status) {
+      case "INSTOCK":
+        return "success";
+      case "LOWSTOCK":
+        return "warning";
+      default:
+        return "danger";
+    }
   }
 }

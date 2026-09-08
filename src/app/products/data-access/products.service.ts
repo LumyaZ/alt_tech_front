@@ -25,7 +25,10 @@ import { environment } from "environments/environment";
     }
 
     public create(product: Product): Observable<boolean> {
-        return this.http.post<boolean>(this.path, product).pipe(
+        // id/createdAt/updatedAt sont générés par le back (auto-increment + @PrePersist) :
+        // les envoyer (ex. createdAt: 0) fait échouer le parsing côté serveur (LocalDateTime)
+        const { id, createdAt, updatedAt, ...payload } = product;
+        return this.http.post<boolean>(this.path, payload).pipe(
             catchError(() => {
                 return of(true);
             }),
@@ -34,7 +37,9 @@ import { environment } from "environments/environment";
     }
 
     public update(product: Product): Observable<boolean> {
-        return this.http.put<boolean>(`${this.path}/${product.id}`, product).pipe(
+        // Même raison qu'à la création : updatedAt est géré par @PreUpdate côté back
+        const { createdAt, updatedAt, ...payload } = product;
+        return this.http.put<boolean>(`${this.path}/${product.id}`, payload).pipe(
             catchError(() => {
                 return of(true);
             }),

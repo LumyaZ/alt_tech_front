@@ -4,15 +4,36 @@
 
 <p-dataView #dv [value]="products()">
     <ng-template pTemplate="list" let-products>
-        @for (product of products; track product) {
+        @for (product of products; track product.id) {
             <p-card class="block mb-2">
-                <span class="font-medium text-secondary text-sm">{{ product.category }}</span>
-                <div class="text-lg font-medium text-900 mt-2">{{ product.name }}</div>
+                <div class="flex gap-3">
+                    <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image"
+                         [alt]="product.name"
+                         width="100" height="100"
+                         style="object-fit: cover;" />
+
+                    <div class="flex-1">
+                        <span class="font-medium text-secondary text-sm">{{ product.category }}</span>
+                        <div class="text-lg font-medium text-900 mt-2">{{ product.name }}</div>
+                        <p class="text-sm text-600 mt-1">{{ product.description }}</p>
+
+                        <div class="flex align-items-center gap-3 mt-2">
+                            <span class="font-bold">{{ product.price | currency:'EUR' }}</span>
+                            <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)" />
+                            <span class="text-sm">Stock : {{ product.quantity }}</span>
+                        </div>
+
+                        <p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false" class="mt-2 block"/>
+                    </div>
+                </div>
 
                 <ng-template pTemplate="footer">
                     <div class="flex gap-3 mt-1">
-                        <p-button label="Modifier" severity="secondary" (onClick)="onUpdate(product)"/>
-                        <p-button label="Supprimer" severity="danger" (onClick)="onDelete(product)" />
+                        <p-button label="Ajouter au panier" icon="pi pi-shopping-cart" (onClick)="onAddToCart(product)"/>
+                        @if (isAdmin()) {
+                            <p-button label="Modifier" severity="secondary" (onClick)="onUpdate(product)"/>
+                            <p-button label="Supprimer" icon="pi pi-trash" severity="danger" (onClick)="onDelete(product)"/>
+                        }
                     </div>
                 </ng-template>
             </p-card>
@@ -22,7 +43,7 @@
 
 <p-dialog [(visible)]="isDialogVisible"
     [style]="{ width: '50vw' }"
-    header="Ajout/Edition produit">
+    [header]="isCreation ? 'Créer un produit' : 'Modifier le produit'">
     <app-product-form
         [product]="editedProduct()"
         (save)="onSave($event)"
