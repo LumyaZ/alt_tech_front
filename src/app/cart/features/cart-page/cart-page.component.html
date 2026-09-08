@@ -1,0 +1,17 @@
+<h1 class="text-center">Mon panier</h1>
+
+@if (cart().items.length === 0) {
+    <p class="text-center">Votre panier est vide.</p>
+}
+
+@for (item of cart().items; track item.id) {
+    <p-card class="block mb-2">
+        <div class="flex justify-content-between align-items-center">
+            <div>
+                <div class="font-medium text-900">{{ item.product.name }}</div>
+                <span class="text-sm text-600">{{ item.product.price | currency:'EUR' }} x {{ item.quantity }}</span>
+            </div>
+            <p-button label="Retirer" icon="pi pi-trash" severity="danger" (onClick)="onRemove(item.product.id)"/>
+        </div>
+    </p-card>
+}

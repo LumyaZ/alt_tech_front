@@ -6,7 +6,12 @@
         {{ title }}
     </div>
     <div class="p-toolbar-group-end flex align-items-center gap-3">
-        <i class="pi pi-shopping-cart" style="font-size: 2rem"></i>
+        <a routerLink="/cart" class="cart-icon-link">
+            <i class="pi pi-shopping-cart" style="font-size: 2rem"></i>
+            @if (cartItemCount() > 0) {
+                <p-badge [value]="cartItemCount().toString()" severity="danger" class="cart-badge"/>
+            }
+        </a>
         <p-button label="Déconnexion" icon="pi pi-sign-out" severity="secondary" (onClick)="onLogout()"/>
     </div>
 </p-toolbar>
