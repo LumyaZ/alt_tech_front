@@ -42,4 +42,11 @@ export class CartService {
       tap((cart) => this._cart.set(cart)),
     );
   }
+
+  // Fixe une quantité exacte pour un produit du panier (0 = le retire)
+  public updateItemQuantity(productId: number, quantity: number): Observable<Cart> {
+    return this.http.put<Cart>(`${this.path}/items/${productId}`, { quantity }).pipe(
+      tap((cart) => this._cart.set(cart)),
+    );
+  }
 }

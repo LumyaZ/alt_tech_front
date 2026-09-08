@@ -9,7 +9,12 @@
         <div class="flex justify-content-between align-items-center">
             <div>
                 <div class="font-medium text-900">{{ item.product.name }}</div>
-                <span class="text-sm text-600">{{ item.product.price | currency:'EUR' }} x {{ item.quantity }}</span>
+                <span class="text-sm text-600">{{ item.product.price | currency:'EUR' }}</span>
+                <div class="flex align-items-center gap-2 mt-1">
+                    <p-button icon="pi pi-minus" [rounded]="true" [text]="true" (onClick)="onDecrement(item)"/>
+                    <span>{{ item.quantity }}</span>
+                    <p-button icon="pi pi-plus" [rounded]="true" [text]="true" (onClick)="onIncrement(item)"/>
+                </div>
             </div>
             <p-button label="Retirer" icon="pi pi-trash" severity="danger" (onClick)="onRemove(item.product.id)"/>
         </div>
