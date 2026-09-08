@@ -1,0 +1,32 @@
+<h1 class="text-center">Contact</h1>
+
+@if (isSubmitted) {
+    <p class="text-center success-message">Demande de contact envoyée avec succès</p>
+} @else {
+    <form #form="ngForm" (ngSubmit)="onSubmit()" class="contact-form">
+        <div class="form-field">
+            <label for="email">Email</label>
+            <input pInputText
+                type="email"
+                id="email"
+                name="email"
+                [(ngModel)]="email"
+                required>
+        </div>
+
+        <div class="form-field">
+            <label for="message">Message</label>
+            <textarea pInputTextarea
+                id="message"
+                name="message"
+                rows="5"
+                [(ngModel)]="message"
+                [maxlength]="messageMaxLength"
+                required>
+            </textarea>
+            <span class="char-count">{{ message.length }} / {{ messageMaxLength }}</span>
+        </div>
+
+        <p-button type="submit" [disabled]="!form.valid" label="Envoyer" class="block text-center"/>
+    </form>
+}

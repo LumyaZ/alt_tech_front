@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { CartPageComponent } from "./cart/features/cart-page/cart-page.component";
+import { ContactComponent } from "./shared/features/contact/contact.component";
 import { HomeComponent } from "./shared/features/home/home.component";
 import { LoginComponent } from "./products/features/login/login.component";
 import { ShellComponent } from "./shared/ui/shell/shell.component";
@@ -31,6 +32,10 @@ export const APP_ROUTES: Routes = [
       {
         path: "cart",
         component: CartPageComponent,
+      },
+      {
+        path: "contact",
+        component: ContactComponent,
       },
     ],
   },

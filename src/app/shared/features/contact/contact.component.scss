@@ -1,0 +1,25 @@
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+
+    textarea {
+        width: 100%;
+    }
+}
+
+.char-count {
+    align-self: flex-end;
+    font-size: 0.8rem;
+    color: var(--text-color-secondary);
+}
+
+.success-message {
+    color: var(--green-600);
+    font-weight: 500;
+}
