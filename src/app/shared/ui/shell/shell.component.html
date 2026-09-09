@@ -12,7 +12,12 @@
                 <p-badge [value]="cartItemCount().toString()" severity="danger" class="cart-badge"/>
             }
         </a>
-        <p-button label="Déconnexion" icon="pi pi-sign-out" severity="secondary" (onClick)="onLogout()"/>
+        <div class="user-session">
+            <p-button label="Déconnexion" icon="pi pi-sign-out" severity="secondary" (onClick)="onLogout()"/>
+            @if (userEmail()) {
+                <span class="user-session-email">Connecté en tant que : {{ userEmail() }}</span>
+            }
+        </div>
     </div>
 </p-toolbar>
 <p-splitter

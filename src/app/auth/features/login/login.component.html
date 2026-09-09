@@ -1,32 +1,37 @@
-<div class="login-container">
-  <h1>Connexion</h1>
+<div class="login-page">
+  <p-card class="login-card">
+    <h1 class="login-title">Connexion</h1>
 
-  <form #form="ngForm" (ngSubmit)="onSubmit()">
-    <div class="form-field">
-      <label for="email">Email</label>
-      <input pInputText
-        type="email"
-        id="email"
-        name="email"
-        [(ngModel)]="email"
-        required>
-    </div>
+    <form #form="ngForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input pInputText
+          type="email"
+          id="email"
+          name="email"
+          class="w-full"
+          [(ngModel)]="email"
+          required>
+      </div>
 
-    <div class="form-field">
-      <label for="password">Mot de passe</label>
-      <p-password
-        id="password"
-        name="password"
-        [(ngModel)]="password"
-        [feedback]="false"
-        [toggleMask]="true"
-        required/>
-    </div>
+      <div class="form-field">
+        <label for="password">Mot de passe</label>
+        <p-password
+          id="password"
+          name="password"
+          [(ngModel)]="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          required/>
+      </div>
 
-    @if (errorMessage) {
-      <p class="error-message">{{ errorMessage }}</p>
-    }
+      @if (errorMessage) {
+        <p class="error-message">{{ errorMessage }}</p>
+      }
 
-    <p-button type="submit" [disabled]="!form.valid" label="Se connecter"/>
-  </form>
+      <p-button type="submit" [disabled]="!form.valid" label="Se connecter" styleClass="w-full"/>
+    </form>
+  </p-card>
 </div>

@@ -36,17 +36,27 @@
                 </div>
 
                 <ng-template pTemplate="footer">
-                    <div class="flex align-items-center gap-3 mt-1">
-                        <p-inputNumber
-                            [ngModel]="quantityFor(product)"
-                            (ngModelChange)="setQuantity(product, $event)"
-                            [min]="1"
-                            [showButtons]="true"
-                            class="w-8rem" />
-                        <p-button label="Ajouter au panier" icon="pi pi-shopping-cart" (onClick)="onAddToCart(product)"/>
+                    <div class="product-footer">
+                        <div class="product-footer-group">
+                            <p-inputNumber
+                                [ngModel]="quantityFor(product)"
+                                (ngModelChange)="setQuantity(product, $event)"
+                                [min]="1"
+                                [showButtons]="true"
+                                buttonLayout="horizontal"
+                                incrementButtonIcon="pi pi-plus"
+                                decrementButtonIcon="pi pi-minus"
+                                decrementButtonClass="p-button-outlined"
+                                incrementButtonClass="p-button-outlined"
+                                inputStyleClass="quantity-stepper-input"
+                                class="quantity-stepper" />
+                            <p-button label="Ajouter au panier" icon="pi pi-shopping-cart" (onClick)="onAddToCart(product)"/>
+                        </div>
                         @if (isAdmin()) {
-                            <p-button label="Modifier" severity="secondary" (onClick)="onUpdate(product)"/>
-                            <p-button label="Supprimer" icon="pi pi-trash" severity="danger" (onClick)="onDelete(product)"/>
+                            <div class="product-footer-group">
+                                <p-button label="Modifier" icon="pi pi-pencil" severity="secondary" [outlined]="true" (onClick)="onUpdate(product)"/>
+                                <p-button label="Supprimer" icon="pi pi-trash" severity="danger" [outlined]="true" (onClick)="onDelete(product)"/>
+                            </div>
                         }
                     </div>
                 </ng-template>

@@ -22,6 +22,7 @@ export class ShellComponent implements OnInit {
 
   public readonly title = "ALTEN SHOP";
   public readonly cartItemCount = this.cartService.itemCount;
+  public readonly userEmail = this.authService.email;
 
   ngOnInit() {
     this.cartService.get().subscribe();
