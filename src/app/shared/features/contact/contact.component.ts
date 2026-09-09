@@ -20,7 +20,6 @@ export class ContactComponent {
   public message = "";
   public isSubmitted = false;
 
-  // Pas d'endpoint back pour le contact dans le sujet : on simule l'envoi côté front
   public onSubmit(): void {
     this.isSubmitted = true;
   }

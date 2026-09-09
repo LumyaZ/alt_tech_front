@@ -20,8 +20,6 @@ export class AuthService {
   public readonly token = this._token.asReadonly();
   public readonly isAuthenticated = computed(() => this._token() !== null);
 
-  // Email de l'utilisateur connecté, lu directement dans le payload du JWT (claim "sub")
-  // - pas besoin d'appeler le back, juste pour affichage/UI (le back revérifie tout de toute façon)
   public readonly email = computed(() => {
     const token = this._token();
     if (!token) {
@@ -37,19 +35,16 @@ export class AuthService {
 
   public readonly isAdmin = computed(() => this.email() === ADMIN_EMAIL);
 
-  // Envoie email/mot de passe à /token, stocke le JWT reçu si la connexion réussit
   public login(email: string, password: string): Observable<TokenResponse> {
     return this.http.post<TokenResponse>(this.path, { email, password }).pipe(
       tap((response) => this.setToken(response.token)),
     );
   }
 
-  // Efface le token courant : déconnecte l'utilisateur
   public logout(): void {
     this.setToken(null);
   }
 
-  // Met à jour le signal ET le localStorage en même temps, pour rester synchronisés
   private setToken(token: string | null): void {
     this._token.set(token);
     if (token) {

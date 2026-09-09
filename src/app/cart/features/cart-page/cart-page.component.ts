@@ -20,12 +20,10 @@ export class CartPageComponent implements OnInit {
     this.cartService.get().subscribe();
   }
 
-  // Retire le produit du panier (par son id, pas celui de la ligne de panier)
   public onRemove(productId: number) {
     this.cartService.removeItem(productId).subscribe();
   }
 
-  // Incrémente/décrémente d'une unité ; retire automatiquement si ça tombe à 0
   public onIncrement(item: CartItem) {
     this.cartService.updateItemQuantity(item.product.id, item.quantity + 1).subscribe();
   }

@@ -20,7 +20,6 @@ export class LoginComponent {
   public password = "";
   public errorMessage = "";
 
-  // Envoie les identifiants à AuthService, redirige vers l'accueil si ça réussit
   public onSubmit(): void {
     this.errorMessage = "";
     this.authService.login(this.email, this.password).subscribe({

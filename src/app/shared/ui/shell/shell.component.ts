@@ -21,16 +21,12 @@ export class ShellComponent implements OnInit {
   private readonly router = inject(Router);
 
   public readonly title = "ALTEN SHOP";
-  // Nombre total d'articles dans le panier, pour le badge sur l'icône
   public readonly cartItemCount = this.cartService.itemCount;
 
   ngOnInit() {
-    // Charge le panier dès l'arrivée sur le shell, pour que le badge soit à jour
-    // sur n'importe quelle page, pas seulement la page Panier elle-même
     this.cartService.get().subscribe();
   }
 
-  // Efface le token et renvoie vers la page de connexion
   public onLogout(): void {
     this.authService.logout();
     this.router.navigateByUrl("/login");

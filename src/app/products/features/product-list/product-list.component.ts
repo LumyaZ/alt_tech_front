@@ -57,10 +57,8 @@ export class ProductListComponent implements OnInit {
   private readonly authService = inject(AuthService);
 
   public readonly products = this.productsService.products;
-  // N'affiche "Modifier" (et le contrôle du formulaire en mode édition) qu'à admin@admin.com
   public readonly isAdmin = this.authService.isAdmin;
 
-  // 12.2 — Filtrage : recherche par nom ou catégorie, appliquée côté front
   public readonly searchTerm = signal("");
   public readonly filteredProducts = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
@@ -73,7 +71,6 @@ export class ProductListComponent implements OnInit {
     );
   });
 
-  // 12.3 — Quantité choisie par produit avant l'ajout au panier (1 par défaut)
   private readonly quantities = new Map<number, number>();
 
   public isDialogVisible = false;
@@ -98,19 +95,16 @@ export class ProductListComponent implements OnInit {
     this.quantities.set(product.id, quantity);
   }
 
-  // Ajoute la quantité choisie du produit au panier de l'utilisateur connecté
   public onAddToCart(product: Product) {
     this.cartService.addItem(product.id, this.quantityFor(product)).subscribe();
   }
 
-  // Ouvre le formulaire pré-rempli pour modifier le produit (réservé admin)
   public onUpdate(product: Product) {
     this.isCreation = false;
     this.isDialogVisible = true;
     this.editedProduct.set(product);
   }
 
-  // Supprime le produit (réservé à admin@admin.com côté back, 403 sinon)
   public onDelete(product: Product) {
     this.productsService.delete(product.id).subscribe();
   }
@@ -132,7 +126,6 @@ export class ProductListComponent implements OnInit {
     this.isDialogVisible = false;
   }
 
-  // Mappe le statut de stock à une couleur de badge PrimeNG
   public getSeverity(status: Product["inventoryStatus"]): "success" | "warning" | "danger" {
     switch (status) {
       case "INSTOCK":
